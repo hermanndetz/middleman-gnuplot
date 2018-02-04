@@ -20,7 +20,7 @@ include Gnuplot
     option :gp_format, 'png',       'Output file format'
 
     @@base_dir = ""
-    @@gnuplot_resources = []
+    @@plot_names = []
 
     # Initializes the middleman-gnuplot extension.
     def initialize(app, options_hash={}, &block)
@@ -116,6 +116,8 @@ include Gnuplot
 
         @@gp.plot gp_command
 
+        register_filename(filename)
+
         return outfile
       end
 
@@ -133,6 +135,8 @@ include Gnuplot
 
             load script
         end
+
+        register_filename(filename)
         
         return outfile
       end
@@ -146,10 +150,24 @@ include Gnuplot
       # +filename+:: input filename
       def random_filename_if_nil (filename=nil)
         if filename.nil? or filename == ""
-            filename = ([*('A'..'Z'),*('0'..'9')]).sample(8).join
+            loop do
+                filename = ([*('A'..'Z'),*('0'..'9')]).sample(8).join
+
+                break if @@plot_names.include?(filename) == false
+            end
         end
         
         return filename
+      end
+
+      # Adds a generated or given filename to the log array to ensure
+      # unique plot names, if no filename is given.
+      # Note: This function does not check the existance of a given
+      # filename in the array.
+      # Params.
+      # +filename+:: filename to be added to array
+      def register_filename (filename)
+        @@plot_names.append(filename)
       end
     end
   end
