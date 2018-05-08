@@ -21,7 +21,7 @@ Update your gem list:
 
 Modify the `config.rb` of your project as follows:
 
-    activate :gnulot do |opts|
+    activate :gnuplot do |opts|
       opts.gp_tmpdir = 'tmp' # path, where plots are stored before copied to build dir
       opts.gp_outdir = 'img' # directory holding plot files with build dir
       opts.gp_format = 'png' # determines output format (currently supports png and pdf)
