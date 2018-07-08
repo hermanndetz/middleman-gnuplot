@@ -79,7 +79,8 @@ module Middleman
     # Generates a random filename, if the given paramter is nil or empty
     # Returns filename (given or random)
     # @param [String] filename input filename
-    def random_filename_if_nil filename=nil
+		# @param [Int] length length of random filename
+    def random_filename_if_nil filename=nil, length=6
         # stub method to enable documentation in yard
     end
 
@@ -168,9 +169,9 @@ module Middleman
 						gp_command << "\"-\" u #{ser[:x]}:#{ser[:y]}"
 
             if ser[:style].nil? == false
-                gp_command << {w:ser[:style]}
+                gp_command << "w #{ser[:style]}"
             else
-                gp_command << {w:'lines'}
+                gp_command << "w lines"
             end
 
             if ser[:color].nil? == false
@@ -178,9 +179,9 @@ module Middleman
             end
 
             if ser[:title].nil? == false
-                gp_command << {t:"#{ser[:title]}"}
+                gp_command << "t \"#{ser[:title]}\""
             else
-                gp_command << {t:''}
+                gp_command << "notitle"
             end
 
             gp_command << ", "
@@ -203,6 +204,8 @@ module Middleman
 						gp_command << "e\n"
 					end
 
+					gp_command = gp_command.join(" ")
+
 					puts "GP cmd: #{gp_command}"
 
 					@@gp.plot gp_command
@@ -217,14 +220,23 @@ module Middleman
 
       private
 
-      # Generates a random filename, if the given paramter is nil or empty
+      # Generates a random filename, if the given paramter is nil or empty.
+			# The length of the random string can be overridden by setting
+			# app.config[:gp_rndfilelength] in config.rb of the middleman project.
+			#
       # Returns filename (given or random)
       # Params.
       # +filename+:: input filename
-      def random_filename_if_nil filename=nil
+			# +length+:: length of random filename
+      def random_filename_if_nil filename=nil, length=6
         if filename.nil? or filename == ""
+
+						length = app.config[:gp_rndfilelength] unless app.config[:gp_rndfilelength].nil?
+
+						puts "Length of random filename: #{length}"
+
             loop do
-                filename = ([*('A'..'Z'),*('0'..'9')]).sample(app.config[:gp_rndfilelength]).join
+                filename = ([*('A'..'Z'),*('0'..'9')]).sample(length).join
 
                 break if @@plot_names.include?(filename) == false
             end

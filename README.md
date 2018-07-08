@@ -26,6 +26,13 @@ Modify the `config.rb` of your project as follows:
       opts.gp_outdir = 'img' # directory holding plot files with build dir
       opts.gp_format = 'png' # determines output format (currently supports png and pdf)
     end
+
+If not specified, the plots will be generated with random filenames,
+which are 6 characters long. This setting can be overridden in `config.rb`
+to e.g. 8 using the following line:
+
+    set :gp_rndfilelength, 8
+
 ## Usage
 
 All functions return the output filename of the plot, which can be used
@@ -58,6 +65,25 @@ The middleman-gnuplot extension provides the following helper methods:
    parameter can be used to define a plot title.
    ```ruby
    image_tag plot_script("path_to_gnuplot_script", "filename", "Plot Title")
+   ```
+
+* `plot_data(data, series, filename, title)`: Plots data points from a given array 
+   `data` directly. The data series can be specified as hashes within the array
+   `series`. Allowed fields are `:x`, `:y`, `:title` and `:style` (lines, points, 
+   linespoints, ...). The default style is lines. `filename` defines the output 
+   filename. If nil, a random filename is generated and returned by the function. 
+   The `title` parameter can be used to define a plot title.
+
+   ```ruby
+   image_tag plot_data([[1,2,1],[2,5,3],[3,3,1],[4,1,5]], 
+                       [{:x => 1, 
+                         :y => 2, 
+                         :title => "Series 1"},
+                        {:x => 1, 
+                         :y => 3, 
+                         :title => "Series 2", 
+                         :style => "points"}], 
+                         "filename", "Plot Title"
    ```
 
 ## Note
