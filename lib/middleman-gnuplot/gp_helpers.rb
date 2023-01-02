@@ -15,6 +15,8 @@ module Middleman
                 term = 'pngcairo'
             when 'pdf'
                 term = 'pdfcairo'
+						when 'svg'
+								term = 'svg'
             else
                 term = 'pngcairo'
             end
